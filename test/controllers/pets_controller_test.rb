@@ -31,10 +31,20 @@ class PetsControllerTest < ActionController::TestCase
     assert_equal 3, body.length
   end
 
-  test "each pet object contains the relevant keys" do
+  test "each pet object in index contains the relevant keys" do
     keys = %w( age human id name )
     get :index
     body = JSON.parse(response.body)
     assert_equal keys, body.map(&:keys).flatten.uniq.sort
+  end
+
+  test "should get pets if input its ID" do
+    get :show, id: pets(:one).id
+    assert_response :ok
+  end
+
+  test "should get pets if input an ID that does not exist" do
+    get :show, id: 4
+    assert_response :no_content
   end
 end
